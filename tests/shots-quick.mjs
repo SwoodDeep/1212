@@ -1,0 +1,31 @@
+import { chromium } from 'playwright';
+import { spawn } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+const OUT='tools/dl/shots/final'; mkdirSync(OUT,{recursive:true});
+const PORT=4184;
+const server=spawn('npx',['vite','preview','--port',String(PORT),'--strictPort','--host','127.0.0.1'],{cwd:'/workspace',stdio:'ignore'});
+await wait(2500);
+const ENV={...process.env,LD_LIBRARY_PATH:'/workspace/tools/syslibs/usr/lib/x86_64-linux-gnu:/workspace/tools/syslibs/lib/x86_64-linux-gnu',FONTCONFIG_FILE:'/workspace/tools/syslibs/etc/fonts/fonts.conf'};
+const browser=await chromium.launch({headless:true,env:ENV,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const page=await browser.newPage({viewport:{width:1600,height:900}});
+page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+await page.goto(`http://127.0.0.1:${PORT}/?fps&quality=high`,{waitUntil:'load'});
+await page.waitForFunction(()=>window.__game&&window.__game.ready,null,{timeout:120000});
+await wait(1200);
+await page.screenshot({path:`${OUT}/q1-menu.png`});
+await page.click('[data-action="open-car"]'); await wait(700);
+await page.screenshot({path:`${OUT}/q2-cars.png`});
+await page.click('#carselect [data-action="back"]');
+await page.evaluate(()=>window.__game.startRace('race'));
+await wait(1000);
+await page.screenshot({path:`${OUT}/q3-countdown.png`});
+await page.evaluate(()=>window.__game.setAutopilot(true));
+await page.waitForFunction(()=>window.__game.race.state==='running',null,{timeout:20000});
+for(let i=0;i<50;i++){await wait(400);const k=await page.evaluate(()=>window.__game.race.player().vehicle.speedKmh);if(k>140)break;}
+await page.screenshot({path:`${OUT}/q4-race.png`});
+await wait(6000);
+await page.screenshot({path:`${OUT}/q5-race2.png`});
+const s=await page.evaluate(()=>({stats:window.__game.stats(),prog:Math.round(window.__game.race.player().prog),lap:window.__game.race.player().lap}));
+console.log(JSON.stringify(s));
+await browser.close(); server.kill();

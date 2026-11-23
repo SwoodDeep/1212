@@ -1,0 +1,6 @@
+node_modules/
+dist/
+tools/dl/
+tools/syslibs/
+tools/kenney-src/
+*.log

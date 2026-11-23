@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>APEX CIRCUIT 3D — браузерная гонка</title>
+    <link rel="stylesheet" href="./src/ui/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+      <div id="ui-root"></div>
+      <div id="loading-screen">
+        <div class="loading-inner">
+          <div class="loading-logo">APEX<span>CIRCUIT</span>3D</div>
+          <div class="loading-bar-wrap"><div id="loading-bar"></div></div>
+          <div id="loading-label">Загрузка… 0%</div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

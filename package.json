@@ -1,0 +1,25 @@
+{
+  "name": "apex-circuit-3d",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Apex Circuit 3D - браузерная 3D-гонка (Three.js + TypeScript + Vite)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "test": "vitest run",
+    "assets": "node tools/fetch-assets.mjs"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/three": "^0.187.0",
+    "playwright": "^1.65.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.4"
+  }
+}
